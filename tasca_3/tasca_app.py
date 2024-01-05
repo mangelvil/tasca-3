@@ -45,10 +45,11 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get input value from the form
-    flor = [float(request.form['amplada_value']),float(request.form['longitud_value'])]
+    flor = {'petal amplada': float(request.form['amplada_value']), 'petal longitud': float(request.form['longitud_value'])}
+    # flor = [float(request.form['amplada_value']),float(request.form['longitud_value'])]
     modelo = request.form['modelo']
         
-    prediction = predice_modelo([flor] ,modelo)
+    prediction = predice_modelo(flor ,modelo)
 
     return render_template('result.html', amplada_value=request.form['amplada_value'], longitud_value=request.form['longitud_value'], modelo=modelo, prediction=prediction)
 
@@ -57,6 +58,9 @@ def predict():
 def regresion():
     
     prediction = predice_modelo(request.get_json() ,'regresion')
+    
+    print(type(request.get_json()))
+    print(request.get_json())
 
     result = {
         'prediction': float(prediction)
