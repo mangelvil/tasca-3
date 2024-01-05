@@ -14,8 +14,8 @@ def predice_modelo(flor, modelo):
     elif modelo == "knn":
         file = "models/knn.pck"
                 
-    elif modelo == "scm":
-        file = "models/scm.pck"
+    elif modelo == "svm":
+        file = "models/svm.pck"
         
     else:
         return false
