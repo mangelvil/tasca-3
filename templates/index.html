@@ -10,6 +10,12 @@
     <form method="post" action="/predict">
         Amplitud: <input type="text" name="amplada_value" required><br/>
         Longitud: <input type="text" name="longitud_value" required><br/>
+        Model: <select name="modelo">
+        <option value="regresion">Regressió logística</option>
+        <option value="decision">Decision Tree</option>
+        <option value="decision">KNN</option>
+        <option value="decision">SVM</option>
+        </select><br/>
         <button type="submit">Predict</button>
     </form>
 </body>

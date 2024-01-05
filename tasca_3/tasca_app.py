@@ -11,6 +11,31 @@ app = Flask('tasta3-predict')
 #     y_pred = model.predict_proba(x)[:, 1]
 #     return y_pred[0]
 
+
+def predice_modelo(flor, modelo):
+    if modelo == "regresion":
+        file = "models/regressio_logistica.pck"
+        
+    elif modelo == "decision":
+        file = "models/decision_tree.pck"
+            
+    elif modelo == "knn":
+        file = "models/knn.pck"
+                
+    elif modelo == "scm":
+        file = "models/scm.pck"
+        
+    else:
+        return false
+    
+    with open(file, 'rb') as f: dv, model = pickle.load(f)
+    
+    x = dv.transform([flor])
+    y_pred = model.predict_proba(x)[:, 1]
+    return y_pred[0]
+    
+    
+
 # Índex de la Web
 @app.route('/')
 def home():
@@ -21,23 +46,17 @@ def home():
 def predict():
     # Get input value from the form
     flor = [float(request.form['amplada_value']),float(request.form['longitud_value'])]
+    modelo = request.form['modelo']
         
-    #prediction = model.predict([flor])
-    x = dv.transform([flor])
-    y_pred = model.predict_proba(x)[:, 1]
+    prediction = predice_modelo([flor] ,modelo)
 
-    return render_template('result.html', amplada_value=request.form['amplada_value'], longitud_value=request.form['longitud_value'], prediction=prediction[0])
+    return render_template('result.html', amplada_value=request.form['amplada_value'], longitud_value=request.form['longitud_value'], modelo=modelo, prediction=prediction)
 
 # Directament amb CURL - Regression
 @app.route('/regresion', methods=['POST'])
 def regresion():
     
-    with open('models/regressio_logistica.pck', 'rb') as f:
-        dv, model = pickle.load(f)
-
-    flor = request.get_json()
-    x = dv.transform([flor])
-    prediction = model.predict_proba(x)[:, 1]
+    prediction = predice_modelo(request.get_json() ,'regresion')
 
     result = {
         'prediction': float(prediction)
@@ -49,12 +68,7 @@ def regresion():
 @app.route('/decision', methods=['POST'])
 def decision():
     
-    with open('models/decision_tree.pck', 'rb') as f:
-        dv, model = pickle.load(f)
-
-    flor = request.get_json()
-    x = dv.transform([flor])
-    prediction = model.predict_proba(x)[:, 1]
+    prediction = predice_modelo(request.get_json() ,'decision')
 
     result = {
         'prediction': float(prediction)
@@ -66,12 +80,7 @@ def decision():
 @app.route('/knn', methods=['POST'])
 def knn():
     
-    with open('models/knn.pck', 'rb') as f:
-        dv, model = pickle.load(f)
-
-    flor = request.get_json()
-    x = dv.transform([flor])
-    prediction = model.predict_proba(x)[:, 1]
+    prediction = predice_modelo(request.get_json() ,'knn')
 
     result = {
         'prediction': float(prediction)
@@ -83,12 +92,7 @@ def knn():
 @app.route('/svm', methods=['POST'])
 def svm():
     
-    with open('models/svm.pck', 'rb') as f:
-        dv, model = pickle.load(f)
-
-    flor = request.get_json()
-    x = dv.transform([flor])
-    prediction = model.predict_proba(x)[:, 1]
+    prediction = predice_modelo(request.get_json() ,'svm')
 
     result = {
         'prediction': float(prediction)
